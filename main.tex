@@ -1,13 +1,83 @@
 \documentclass{article}
 
-\title{Pros and cons of using LALR and LR(1) for synthetic code generation}
+\usepackage[
+backend=biber,
+sorting=ynt
+]{biblatex}
+\addbibresource{reference.bib}
+
+\title{Usage of LALR and LR(1) for Synthetic Code Generation}
 \author{Lucas Santiago de Oliveira}
-\date{September 19, 2023}
+\date{September 25, 2023}
 
 \begin{document}
     \maketitle
 
-    It's pretty hard to find a fast and efficient LR(1) parser.
+    It's pretty hard to find a fast and efficient LR(1) parser. That's the first idea that
+    the article authors wants to make clear. We need to keep it in mind: creating a LALR and LR(1) can be extremely
+    difficult and takes high time and space complexy. This type of parser easily goes up to thousands and thousands of automata states, that
+    means no one can write all the states by hand, needing to create an algorithm to generate automatically.
 
+    If it is so hard to create those types of parser why do the authors wants to do that? First, at the time of
+    creation of this article\cite{hyacc}, there weren't many LALR and LR(1) parsers available. So,
+    the authors decided to create one test and make the code open source so everyone could test it and use it.
+    Other important factors are error handling is much more robust than a simple LL parser and after built the efficiency
+    is superior, parsing code much faster than LL.
 
+    % Eficciency, code parsing speed - article tests
+    The main goal of the article is to show the efficiancy of their parser. When they compared to other
+    implementations they got amazing performance for both cases.
+
+    \begin{figure}[h!]
+        \centering
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            Parsers & Worst Time & Best Time & Best implementation \\
+            \hline
+            Menhir & 1.97 & 1.48 & PG MLR(1) \\
+            \hline
+            MSTA & 5.32 & 1.17 & LALR(1) \\
+            \hline
+            Hyacc & 3.53 & 1.10 & LALR(1) \\
+            \hline
+        \end{tabular}
+        \caption{Time for parsing a C++ grammar in seconds for different parsers.}
+    \end{figure}
+
+    \begin{figure}[h!]
+        \centering
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            Parsers & Worst Time & Best Time & Best implementation \\
+            \hline
+            Menhir & 1.64 & 0.56 & PG MLR(1) \\
+            \hline
+            MSTA & 0.92 & 0.13 & LALR(1) \\
+            \hline
+            Hyacc & 1.05 & 0.19 & LALR(1) \\
+            \hline
+        \end{tabular}
+        \caption{Time for parsing a C grammar in seconds for different parsers.}
+    \end{figure}
+
+    Looking to those two figures it is noticiable that in both cases LALR(1) was the clear winner
+    being the fastest parser. For C++ Hyacc got the best time of those three parsers, for C it got the
+    second position 0.06 seconds behind the first place [MSTA] that used LALR(1) as well.
+
+    % Paragraph about error handling
+    In general LR(k) parsers have really good error handlings. This type of parser is capable of detecting missing tokens
+    adding them where they are missing, so the parser doesn't need to stop before parsing the rest of the file
+    giving more information in just one compilation try. Hyacc specifically doesn't give really good
+    error messages, just like said in the section 2.6 of Hyacc article\cite{hyacc}. Considering that the project
+    is open source anyone can just fix this making this program even better.
+
+    % Conclusion
+    \Citeauthor{hyacc} tried to create a new and document scassed type of parser LR(1).
+    Yacc and Bison are two very famous LALR(1) parsers that were already wide used by the community.
+    Considering the superior performance, it's uniqueness, coverage, efficiency, portability,
+    usability and availability of Hyacc, this algorithm was very important to present to the community
+    a new important algorithm to parse grammars.
+
+    % Show all references used
+    \printbibliography
 \end{document}
